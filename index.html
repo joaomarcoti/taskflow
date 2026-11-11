@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f6f8">
+  <meta name="description" content="Organize suas tarefas com clareza e mantenha o foco no que importa.">
+  <title>TaskFlow — Organize seu dia</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/script.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegação de tarefas">
+      <a class="brand" href="#" aria-label="TaskFlow, início">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="m5 12.5 4.2 4.2L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span>task<span class="brand-light">flow</span></span>
+      </a>
+
+      <div class="sidebar-section">
+        <p class="sidebar-label">VISÃO GERAL</p>
+        <nav class="filter-nav" aria-label="Filtrar tarefas">
+          <button class="filter-button is-active" type="button" data-filter="all" aria-pressed="true">
+            <span class="nav-icon" aria-hidden="true">▦</span>
+            <span>Todas as tarefas</span>
+            <span class="nav-count" id="all-count">0</span>
+          </button>
+          <button class="filter-button" type="button" data-filter="pending" aria-pressed="false">
+            <span class="nav-icon nav-icon-pending" aria-hidden="true">◷</span>
+            <span>Pendentes</span>
+            <span class="nav-count" id="pending-count">0</span>
+          </button>
+          <button class="filter-button" type="button" data-filter="completed" aria-pressed="false">
+            <span class="nav-icon nav-icon-completed" aria-hidden="true">✓</span>
+            <span>Concluídas</span>
+            <span class="nav-count" id="completed-count">0</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="sidebar-note">
+        <span class="note-sparkle" aria-hidden="true">✦</span>
+        <p>Pequenos passos todos os dias levam a grandes resultados.</p>
+      </div>
+      <p class="sidebar-footer">SEU ESPAÇO, SEU RITMO</p>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="date-label" id="today-label"></div>
+        <div class="topbar-user" aria-label="Seu espaço de trabalho">
+          <span class="user-avatar" aria-hidden="true">T</span>
+          <span class="user-name">Meu espaço</span>
+        </div>
+      </header>
+
+      <section class="page-heading" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">SEU DIA, COM MAIS LEVEZA</p>
+          <h1 id="page-title">Minhas tarefas<span class="heading-dot">.</span></h1>
+          <p class="page-subtitle">Um passo de cada vez. Você está no caminho certo.</p>
+        </div>
+        <button class="button button-primary" id="add-task-button" type="button">
+          <span class="button-plus" aria-hidden="true">+</span>
+          Nova tarefa
+        </button>
+      </section>
+
+      <section class="summary-grid" aria-label="Resumo das tarefas">
+        <article class="summary-card summary-total">
+          <div class="summary-topline">
+            <span class="summary-icon total-icon" aria-hidden="true">▦</span>
+            <span class="summary-caption">NO TOTAL</span>
+          </div>
+          <p class="summary-number" id="total-count">0</p>
+          <p class="summary-description">tarefas organizadas</p>
+          <span class="summary-decoration" aria-hidden="true"></span>
+        </article>
+        <article class="summary-card summary-done">
+          <div class="summary-topline">
+            <span class="summary-icon done-icon" aria-hidden="true">✓</span>
+            <span class="summary-caption">CONCLUÍDAS</span>
+          </div>
+          <p class="summary-number" id="done-count">0</p>
+          <p class="summary-description">cada conquista conta</p>
+          <span class="summary-decoration" aria-hidden="true"></span>
+        </article>
+        <article class="summary-card summary-pending">
+          <div class="summary-topline">
+            <span class="summary-icon pending-icon" aria-hidden="true">◷</span>
+            <span class="summary-caption">PENDENTES</span>
+          </div>
+          <p class="summary-number" id="pending-summary-count">0</p>
+          <p class="summary-description">prontas para começar</p>
+          <span class="summary-decoration" aria-hidden="true"></span>
+        </article>
+      </section>
+
+      <section class="tasks-section" aria-labelledby="tasks-heading">
+        <div class="tasks-heading-row">
+          <div>
+            <h2 id="tasks-heading">Sua lista</h2>
+            <p class="tasks-subtitle" id="tasks-description">Tudo o que você quer tirar do papel.</p>
+          </div>
+          <label class="priority-filter">
+            <span class="sr-only">Filtrar por prioridade</span>
+            <select id="priority-filter" aria-label="Filtrar por prioridade">
+              <option value="all">Todas as prioridades</option>
+              <option value="high">Prioridade alta</option>
+              <option value="medium">Prioridade média</option>
+              <option value="low">Prioridade baixa</option>
+            </select>
+          </label>
+        </div>
+        <div class="task-list" id="task-list" aria-describedby="tasks-description"></div>
+      </section>
+
+      <footer class="main-footer">
+        <span>Feito para ajudar você a focar no que importa.</span>
+        <span class="footer-heart" aria-hidden="true">♥</span>
+      </footer>
+    </main>
+  </div>
+
+  <dialog class="task-dialog" id="task-dialog" aria-labelledby="dialog-title">
+    <form class="task-form" id="task-form">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">UM NOVO PASSO</p>
+          <h2 id="dialog-title">Nova tarefa</h2>
+        </div>
+        <button class="icon-button dialog-close" id="close-dialog-button" type="button" aria-label="Fechar formulário">×</button>
+      </div>
+
+      <label class="form-field">
+        <span>Título <span class="required-mark" aria-hidden="true">*</span></span>
+        <input id="task-title" name="title" type="text" maxlength="80" placeholder="Ex.: Revisar matéria de algoritmos" required autofocus>
+      </label>
+
+      <label class="form-field">
+        <span>Descrição <span class="field-optional">OPCIONAL</span></span>
+        <textarea id="task-description" name="description" rows="3" maxlength="300" placeholder="Adicione alguns detalhes para não esquecer..."></textarea>
+      </label>
+
+      <div class="form-row">
+        <label class="form-field">
+          <span>Categoria</span>
+          <select id="task-category" name="category">
+            <option value="Estudos">Estudos</option>
+            <option value="Trabalho">Trabalho</option>
+            <option value="Pessoal">Pessoal</option>
+            <option value="Saúde">Saúde</option>
+            <option value="Outros">Outros</option>
+          </select>
+        </label>
+        <label class="form-field">
+          <span>Prioridade</span>
+          <select id="task-priority" name="priority">
+            <option value="medium">Média</option>
+            <option value="high">Alta</option>
+            <option value="low">Baixa</option>
+          </select>
+        </label>
+      </div>
+
+      <label class="form-field">
+        <span>Data de vencimento <span class="field-optional">OPCIONAL</span></span>
+        <input id="task-due-date" name="dueDate" type="date">
+      </label>
+
+      <div class="dialog-actions">
+        <button class="button button-secondary" id="cancel-dialog-button" type="button">Cancelar</button>
+        <button class="button button-primary" type="submit" id="save-task-button">Salvar tarefa</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="sr-only" id="status-message" role="status" aria-live="polite"></div>
+</body>
+</html>
